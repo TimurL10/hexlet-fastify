@@ -33,6 +33,12 @@ app.get('/hello',(req,res) => {
   
 })
 
+//users/{id}/post/{postId}
+
+app.get('/users/:id/post/:postId',(req,res) => {
+  res.send(`Id: ${req.params.id}, Post Id: ${req.params.postId}`)
+})
+
 app.get('/search', (req, res) => {
   const { id } = req.query
   const user = state.users.find(user => user.id === parseInt(id)) // Приведение к одному типу и сравнение
