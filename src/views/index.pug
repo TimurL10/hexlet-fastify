@@ -1,0 +1,12 @@
+extends ../views/layouts/page.pug
+
+block content 
+  a(href='/courses/new') New Course 
+
+  each course in courses 
+    div 
+      p=course.title
+
+block footer
+  h1 src
+  a(href='https://github.com/TimurL10/hexlet-fastify') Исходный код

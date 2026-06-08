@@ -1,47 +1,34 @@
 import fastify from 'fastify'
+import view from '@fastify/view'
+import pug from 'pug'
+import cars from './data_pug/cars.js'
 
 const app = fastify()
 const port = 3000
 
+// Подключаем pug через плагин
+await app.register(view, { engine: { pug } })
+
 const state = {
-  users: [
+  courses: [
     {
       id: 1,
-      name: 'user',
+      title: "JS: Массивы",
+      description: 'Курс про массивы в JavaScript',
+    },
+    {
+      id: 2,
+      title: "JS: Функции",
+      description: 'Курс про функции в JavaScript',
     },
   ],
 }
 
-app.get('/users', (req, res) => {
-  res.send('GET /users')
-})
 
-app.get('/', (req, res) => {
-  res.send('GET /home')
-})
-
-app.post('/users', (req, res) => {
-  res.send('POST /users')
-})
-
-app.get('/hello',(req,res) => {
-  const {name} = req.query;
-  if (name)
-    res.send(`Hello, ${name}!`)
-  else
-    res.send('Hello, World!')
-  
-})
-
-//users/{id}/post/{postId}
-
-app.get('/users/:id/post/:postId',(req,res) => {
-  res.send(`Id: ${req.params.id}, Post Id: ${req.params.postId}`)
-})
 
 app.get('/search', (req, res) => {
   const { id } = req.query
-  const user = state.users.find(user => user.id === parseInt(id)) // Приведение к одному типу и сравнение
+  const user = state.users.find(user => user.id === parseInt(id)) 
   if (!user) {
     res.code(404).send({ message: 'User not found' })
   }
@@ -49,6 +36,26 @@ app.get('/search', (req, res) => {
     res.send(user)
   }
 })
+
+app.get('/courses', (req, res) => {
+  const data = {
+    courses: state.courses,
+    header: 'Курсы по программированию',
+  }
+  res.view('/src/views/index.pug', data)
+})
+
+app.get('/courses/:id', (req, res) => {
+  const { id } = req.params;
+  const course = state.courses.find(course => course.id === parseInt(id))
+  if (!course) {
+    res.code(404).send({ message: 'Course not found' })
+  }
+  else {
+    res.view('/src/views/course.pug', { course })
+  }  
+})
+
 
 app.listen({ port }, () => {
   console.log(`Example app listening on port ${port}`)

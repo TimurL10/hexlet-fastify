@@ -5,21 +5,21 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "dev": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fastify": "^5.8.5"
+    "@fastify/view": "^11.1.1",
+    "fastify": "^5.8.5",
+    "pug": "^3.0.4"
   },
-  
   "devDependencies": {
     "fastify-cli": "^8.0.0"
-  }, 
-
+  },
   "overrides": {
     "yargs-parser": "21.1.1",
     "chokidar": "3.6.0"
   }
-
 }
