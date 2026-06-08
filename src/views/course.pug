@@ -1,9 +1,8 @@
 extends ../views/layouts/page.pug
 
 block content
-  h1= course.title
-  p= course.description
-
-block footer
-  h1 src
-  a(href='https://github.com/TimurL10/hexlet-fastify') Исходный код
+  .card.shadow-sm
+    .card-body
+      h1.card-title.mb-3= course.title
+      p.card-text.lead= course.description
+      a.btn.btn-outline-primary(href='/courses') Назад к курсам
