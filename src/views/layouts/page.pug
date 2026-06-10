@@ -16,8 +16,9 @@ html(lang='ru')
 
     main.container.my-4.flex-grow-1
       block content
+      block search
 
     footer.bg-dark.text-white.py-3.mt-auto
       .container
         a.text-white(href='https://github.com/TimurL10/hexlet-fastify') Исходный код
-        
+        block content h1= course.title p= course.description

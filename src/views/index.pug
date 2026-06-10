@@ -1,5 +1,31 @@
 extends ../views/layouts/page.pug
 
+block search
+    .card.mb-4
+      .card-body
+        form(action='/courses' method='get')
+          .mb-3
+            label.form-label(for='term') Поиск курса
+            input#term.form-control(type='search' required name='term' placeholder='Введите название курса')
+
+          .mb-3
+            label.form-label(for='category') Категория
+            select#category.form-select(name='category')
+              option(value='') Все категории
+              option(value='frontend') Frontend
+              option(value='backend') Backend
+              option(value='database') Базы данных
+
+          .mb-3
+            label.form-label(for='level') Уровень
+            select#level.form-select(name='level')
+              option(value='') Любой уровень
+              option(value='beginner') Начальный
+              option(value='middle') Средний
+              option(value='advanced') Продвинутый
+
+          button.btn.btn-primary(type='submit') Искать
+
 block content
   .d-flex.justify-content-between.align-items-center.mb-4
     h1 Курсы
