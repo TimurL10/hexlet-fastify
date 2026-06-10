@@ -1,30 +1,36 @@
 extends ../views/layouts/page.pug
 
 block search
-    .card.mb-4
-      .card-body
-        form(action='/courses' method='get')
-          .mb-3
-            label.form-label(for='term') Поиск курса
-            input#term.form-control(type='search' required name='term' placeholder='Введите название курса')
+    block search
+      .card.mb-4
+        .card-body
+          form(action='/courses' method='get')
+            .mb-3
+              label.form-label(for='term') Поиск курса
+              input#term.form-control(
+                type='search'
+                name='term'
+                placeholder='Введите название курса'
+                value=formData.course_name
+              )
 
-          .mb-3
-            label.form-label(for='category') Категория
-            select#category.form-select(name='category')
-              option(value='') Все категории
-              option(value='frontend') Frontend
-              option(value='backend') Backend
-              option(value='database') Базы данных
+            .mb-3
+              label.form-label(for='category') Категория
+              select#category.form-select(name='category')
+                option(value='' selected=formData.category === '') Все категории
+                option(value='frontend' selected=formData.category === 'frontend') Frontend
+                option(value='backend' selected=formData.category === 'backend') Backend
+                option(value='database' selected=formData.category === 'database') Базы данных
 
-          .mb-3
-            label.form-label(for='level') Уровень
-            select#level.form-select(name='level')
-              option(value='') Любой уровень
-              option(value='beginner') Начальный
-              option(value='middle') Средний
-              option(value='advanced') Продвинутый
+            .mb-3
+              label.form-label(for='level') Уровень
+              select#level.form-select(name='level')
+                option(value='' selected=formData.level === '') Любой уровень
+                option(value='beginner' selected=formData.level === 'beginner') Начальный
+                option(value='middle' selected=formData.level === 'middle') Средний
+                option(value='advanced' selected=formData.level === 'advanced') Продвинутый
 
-          button.btn.btn-primary(type='submit') Искать
+            button.btn.btn-primary(type='submit') Искать
 
 block content
   .d-flex.justify-content-between.align-items-center.mb-4

@@ -73,13 +73,20 @@ app.get('/courses', (req, res) => {
   const data = {
     courses: state.courses,
     header: 'Курсы по программированию',
+    formData: {}
   }
     const course_name = req.query.term;
     const level = req.query.level;
     const category = req.query.category;
-    console.log(course_name);
-    console.log(level);
-    console.log(category);
+
+    data.formData = {
+      course_name,
+      level,
+      category
+    }
+    //console.log(course_name);
+    //console.log(level);
+    //console.log(category);
 
   if (course_name) {   
 
@@ -87,8 +94,9 @@ app.get('/courses', (req, res) => {
                                 (item.level == level || item.level == item.level) &&
                                 (item.category == category || item.category == item.category))
 
-    data.courses = a;
-    console.log(JSON.stringify(data));
+    data.courses = a;  
+
+    //console.log(JSON.stringify(data));
     res.view('/src/views/index.pug', data)
   }
   else
