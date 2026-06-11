@@ -120,7 +120,7 @@ app.post('/users', (req, res) => {
     let {name, email, password} = req.body;
     state_users.users.sort((a,b)=> b.id - a.id);
     let max_id = state_users.users[0].id;
-    let obj = {id: max_id+1,name: name, email:email, password: password}
+    let obj = {id: max_id+1,name: name, email:email.trim().toLowerCase(), password: password}
     console.log(obj)
     state_users.users.push(obj);
     console.log(JSON.stringify(state_users.users))
