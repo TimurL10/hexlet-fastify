@@ -1,0 +1,45 @@
+extends ../views/layouts/users_page.pug
+
+block search
+  html
+    body
+      .card.mb-4
+        .card-body
+          form(action='/users' method='post')
+            .mb-3
+              label.form-label(for='name') Имя:
+              input#name.form-control(
+                type='text'
+                name='name'
+                placeholder='Введите имя'
+              )
+
+            .mb-3
+              label.form-label(for='email') Email:
+              input#email.form-control(
+                type='email'
+                name='email'
+                required=true
+                placeholder='Введите email'
+              )
+
+            .mb-3
+              label.form-label(for='password') Пароль:
+              input#password.form-control(
+                type='password'
+                name='password'
+                required=true
+                placeholder='Введите пароль'
+              )
+
+            .mb-3
+              label.form-label(for='passwordConfirmation') Подтверждение пароля:
+              input#passwordConfirmation.form-control(
+                type='password'
+                name='passwordConfirmation'
+                required=true
+                placeholder='Повторите пароль'
+              )
+
+            button.btn.btn-primary(type='submit') Зарегистрировать
+

@@ -1,8 +1,12 @@
-doctype html
-html(lang='ru')
-  head
-    meta(charset='utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-  body
-    h1=text_html
-    h1 test
+extends ../views/layouts/users_page.pug
+
+block content
+  .d-flex.justify-content-between.align-items-center.mb-4
+    h1 Пользователи
+    a.btn.btn-primary(href='/users/new') New User
+
+  each user in users
+    .card.mb-3
+      .card-body
+        h5.card-title= user.name
+        a.btn.btn-outline-primary.btn-sm(href=`/users/${user.id}`) Смотреть
