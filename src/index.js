@@ -4,6 +4,7 @@ import pug from 'pug'
 import cars from './data_pug/cars.js'
 import sanitize from 'sanitize-html'
 import formbody from '@fastify/formbody'
+import yup from 'yup';
 
 
 
@@ -115,9 +116,42 @@ app.get('/users', (req, res) => {
     res.view('/src/views/users.pug',state_users);
 })
 
-app.post('/users', (req, res) => {  
+app.post('/users', {
+  attachValidation: true,
+  schema: {
+    body: yup.object({
+      name: yup.string().min(2, 'Имя должно быть не меньше двух символов'),
+      email: yup.string().email(),
+      password: yup.string().min(5),
+      passwordConfirmation: yup.string().min(5),
+    }),
+  },
+  validatorCompiler: ({ schema, method, url, httpPart }) => (data) => {
+    if (data.password !== data.passwordConfirmation) {
+      return {
+        error: Error('Password confirmation is not equal the password'),
+      }
+    }
+    try {
+      const result = schema.validateSync(data)
+      return { value: result }
+    }
+    catch (e) {
+      return { error: e }
+    }
+  },
+}, (req, res) => {  
     console.log(req.body)
-    let {name, email, password} = req.body;
+    let {name, email, password,passwordConfirmation} = req.body;
+
+    if (req.validationError) {
+      const data = {
+        name, email, password, passwordConfirmation,
+        error: req.validationError,
+      }      
+      res.view('src/views/new_users.pug', data)
+      return
+    }    
     state_users.users.sort((a,b)=> b.id - a.id);
     let max_id = state_users.users[0].id;
     let obj = {id: max_id+1,name: name, email:email.trim().toLowerCase(), password: password}
@@ -125,6 +159,11 @@ app.post('/users', (req, res) => {
     state_users.users.push(obj);
     console.log(JSON.stringify(state_users.users))
     res.view('/src/views/users.pug',state_users)
+})
+
+app.get('/courses/new', (req, res) => {
+   //id = sanitize(id);
+   res.view('/src/views/new_course.pug')
 })
 
 app.get('/courses', (req, res) => {
@@ -173,9 +212,19 @@ app.get('/courses/:id', (req, res) => {
   }  
 })
 
+app.post('/courses', (req, res) => {
+  const { title, category, description, level } = req.body;
+  console.log(req.body)
+  state.courses.sort((a,b)=> b.id - a.id);
+  let max_id = state.courses[0].id;
+  state.courses.push({ id:max_id+1, title:title, category:category, description:description, level:level })
+  res.view('/src/views/courses.pug', state)
+  // Process the form data and save the new course
+});
+
 
 
 
 app.listen({ port }, () => {
   console.log(`Example app listening on port ${port}`)
-})
+}) 

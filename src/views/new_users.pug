@@ -5,6 +5,8 @@ block search
     body
       .card.mb-4
         .card-body
+          if error
+            p= error.message
           form(action='/users' method='post')
             .mb-3
               label.form-label(for='name') Имя:
@@ -42,4 +44,3 @@ block search
               )
 
             button.btn.btn-primary(type='submit') Зарегистрировать
-

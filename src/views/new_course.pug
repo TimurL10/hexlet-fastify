@@ -1,0 +1,44 @@
+extends ../views/layouts/page.pug
+
+block search
+  html
+    body
+      .card.mb-4
+        .card-body
+          if error
+            p= error.message
+          form(action='/courses' method='post')
+            .mb-3
+              label.form-label(for='title') Название курса:
+              input#title.form-control(
+                type='text'
+                name='title'
+                placeholder='Введите название курса'
+              )
+
+            .mb-3
+              label.form-label(for='category') Категория:
+              input#category.form-control(
+                type='text'
+                name='category'
+                placeholder='Введите категорию'
+              )              
+
+            .mb-3
+              label.form-label(for='description') Описание:
+              textarea#description.form-control(
+                name='description'
+                placeholder='Введите описание курса'
+              )              
+
+            .mb-3
+              label.form-label(for='level') Уровень:
+              input#level.form-control(
+                type='text'
+                name='level'
+                placeholder='Введите уровень'
+              )
+              
+              
+
+            button.btn.btn-primary(type='submit') Зарегистрировать

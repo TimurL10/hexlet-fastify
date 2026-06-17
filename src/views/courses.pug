@@ -1,0 +1,12 @@
+extends ../views/layouts/page.pug
+
+block content
+  .d-flex.justify-content-between.align-items-center.mb-4
+    h1 Курсы
+    a.btn.btn-primary(href='/courses/new') New Course
+
+  each course in courses
+    .card.mb-3
+      .card-body
+        h5.card-title= course.title
+        a.btn.btn-outline-primary.btn-sm(href=`/courses/${course.id}`) Смотреть
