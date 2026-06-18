@@ -8,14 +8,39 @@ import yup from 'yup';
 
 
 
-const app = fastify()
+const app = fastify({
+  routerOptions: {
+    ignoreTrailingSlash: true,
+  },
+});
 const port = 3000
 
 // Подключаем pug через плагин
 await app.register(view, { engine: { pug } })
 await app.register(formbody);
 
+//Динамическая маршрутизация
+class Routes {
+ routes_obj = {
+    usersPath: () => '/users',
+    userPath: id => `/users/${id}`,
+    newUserPath: () => '/users/new',
+    coursesPath: () => '/courses',
+    coursePath: id => `/courses/${id}`,
+    newCoursePath: () => '/courses/new'
+  }
+  get_rout = (rout_name,prop=null) => {
+    if (this.routes_obj[rout_name])
+      return this.routes_obj[rout_name](prop);       
+    else
+      return null;
+  }
+}
+
+let rout = new Routes;
+
 const state = {
+  rout,
   courses: [
     {
       id: 1,
@@ -63,6 +88,7 @@ const state = {
 }
 
 const state_users = {
+  rout,
   users: [
     {
       id:1,
@@ -97,11 +123,12 @@ app.get('/users/:id', (req, res) => {
 */
 
 
+
 app.get('/users/:id', (req, res) => {
     let {id}  = req.params;
     let user = state_users.users.find(item => item.id ===  parseInt(id));
     if (!user) {
-      return reply.code(404).send('User not found')
+      return res.code(404).send('User not found')
     }
     console.log(user)
     res.view('/src/views/user.pug', {user})
@@ -112,8 +139,9 @@ app.get('/users/new', (req, res) => {
    res.view('/src/views/new_users.pug')
 })
 
-app.get('/users', (req, res) => { 
-    res.view('/src/views/users.pug',state_users);
+app.get(rout.get_rout('usersPath'), (req, res) => { 
+
+    return res.view('/src/views/users.pug',state_users);
 })
 
 app.post('/users', {

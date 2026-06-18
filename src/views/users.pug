@@ -3,10 +3,10 @@ extends ../views/layouts/users_page.pug
 block content
   .d-flex.justify-content-between.align-items-center.mb-4
     h1 Пользователи
-    a.btn.btn-primary(href='/users/new') New User
+    a.btn.btn-primary(href=rout.get_rout('newUserPath')) New User
 
   each user in users
     .card.mb-3
       .card-body
         h5.card-title= user.name
-        a.btn.btn-outline-primary.btn-sm(href=`/users/${user.id}`) Смотреть
+        a.btn.btn-outline-primary.btn-sm(href=rout.get_rout('userPath',user.id)) Смотреть
