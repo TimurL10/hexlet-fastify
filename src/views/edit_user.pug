@@ -1,0 +1,34 @@
+extends ../views/layouts/users_page.pug
+
+block edit_content
+  .card.shadow-sm
+    .card-body
+      h1.card-title.mb-3 Редактировать пользователя
+
+      if error
+        .alert.alert-danger
+          p.mb-0= error.message
+
+      form(action=`/users/${user.id}` method='post')
+        input(type='hidden' name='_method' value='PATCH')
+        .mb-3
+          label.form-label(for='name') Имя:
+          input#name.form-control(
+            type='text'
+            name='name'
+            value=user.name
+            placeholder='Введите имя'
+          )
+
+        .mb-3
+          label.form-label(for='email') Email:
+          input#email.form-control(
+            type='email'
+            name='email'
+            value=user.email
+            placeholder='Введите email'
+          )       
+        
+
+        button.btn.btn-primary(type='submit') Сохранить
+        a.btn.btn-outline-secondary.ms-2(href=`/users/${user.id}`) Отмена

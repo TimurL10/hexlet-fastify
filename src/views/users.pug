@@ -9,4 +9,11 @@ block content
     .card.mb-3
       .card-body
         h5.card-title= user.name
-        a.btn.btn-outline-primary.btn-sm(href=rout.get_rout('userPath',user.id)) Смотреть
+
+        .d-flex.gap-2
+          a.btn.btn-outline-primary.btn-sm(href=rout.get_rout('userPath',user.id)) Смотреть
+          a.btn.btn-outline-secondary.btn-sm(href=rout.get_rout('editUserPath',user.id)) Изменить   
+          form.m-0(action=rout.get_rout('deleteUserPath', user.id) method='post')
+            input(type='hidden' name='_method' value='DELETE')
+            button.btn.btn-outline-danger.btn-sm(type='submit') Удалить      
+

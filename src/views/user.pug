@@ -4,6 +4,17 @@ block content
   .card.shadow-sm
     .card-body
       h1.card-title.mb-3= user.name
-      p.card-text.lead= user.email
-      p.card-text.lead= user.password
+
+      p.card-text.lead
+        strong Имя: 
+        span= user.name
+
+      p.card-text.lead
+        strong Email: 
+        span= user.email
+
+      p.card-text.lead
+        strong Пароль: 
+        span= user.password
+
       a.btn.btn-outline-primary(href='/users') Назад к пользователям
