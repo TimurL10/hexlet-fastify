@@ -3,6 +3,7 @@ import view from '@fastify/view'
 import pug from 'pug'
 import formbody from '@fastify/formbody'
 import middie from '@fastify/middie'
+import f_cookie from '@fastify/cookie'
 import users_routes from './modules/users/users_routes.js';
 //import courses_routes from './modules/courses/courses_routes.js';
 
@@ -19,8 +20,10 @@ try {
   // Подключаем pug через плагин
   await app.register(view, { engine: { pug } })
   await app.register(formbody);
+  await app.register(f_cookie);
   await app.register(middie);  
   await app.register(users_routes);
+
   //await app.register(courses_routes,{prefix:'/courses'});
 
 

@@ -44,9 +44,16 @@ export default async function users_routes(app) {
     })
 
     app.get(rout.get_rout('usersPath'), (req, res) => {
-        let state_users = controller.get_users();
-        state_users.rout = rout;
-        return res.view('/src/views/users.pug',state_users)
+
+        const visited = Boolean(req.cookies.visited);
+        res.cookie('visited', 'true', { path: '/' });
+
+        let state_users = controller.get_users();        
+        return res.view('/src/views/users.pug',{
+            users: state_users.users,
+            rout,
+            visited,
+        })
     })
 
     app.post('/users', {
@@ -87,7 +94,7 @@ export default async function users_routes(app) {
         if (typeof(state_users) != 'object')
             return  res.code(404).send('user not found'); 
         else
-            res.view('/src/views/users.pug',state_users)
+            res.redirect('/users')
     })
 
     app.get('/users/:id/edit', (req, res) => {
@@ -128,22 +135,11 @@ export default async function users_routes(app) {
             res.redirect('/users')
     }) 
 
-    app.use((req, res, next) => {
-        const url = new URL(req.url, 'http://localhost')
-        console.log(url)
-        if (req.method === 'POST') {
-            const method = url.searchParams.get('_method')
-
-            if (method) {
-                req.method = method.toUpperCase()
-
-            url.searchParams.delete('_method')
-            req.url = url.pathname + url.search
-            }
-        }
-
+    /*app.use((req, res, next) => {
+        let coo = req.cookies.visited;
+        res.cookie('visited', true)
         next()
-        })
+    })*/
 
 
 

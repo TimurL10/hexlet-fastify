@@ -1,6 +1,8 @@
 extends ../views/layouts/users_page.pug
 
 block content
+  if !visited
+    h1 Это сообщение показывается только один раз. Если вы хотите увидеть его снова, сотрите куки
   .d-flex.justify-content-between.align-items-center.mb-4
     h1 Пользователи
     a.btn.btn-primary(href=rout.get_rout('newUserPath')) New User
