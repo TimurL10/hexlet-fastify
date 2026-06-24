@@ -1,0 +1,30 @@
+extends ../views/layouts/users_page.pug
+
+block content
+  html
+    body
+      .card.mb-4
+        .card-body
+          if error
+            p= error.message
+          h1 Вход  
+          form(action='/login' method='post')
+            .mb-3
+              label.form-label(for='name') Имя:
+              input#name.form-control(
+                type='text'
+                name='name'
+                required=true
+                placeholder='Введите имя'
+              )            
+
+            .mb-3
+              label.form-label(for='password') Пароль:
+              input#password.form-control(
+                type='password'
+                name='password'
+                required=true
+                placeholder='Введите пароль'
+              )
+
+            button.btn.btn-primary(type='submit') Войти

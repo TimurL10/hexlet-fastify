@@ -86,8 +86,8 @@ function get_users () {
 function post_users(req_body) { 
   try {
     let {name, email, password,passwordConfirmation} = req_body;       
-    state_users.users.sort((a,b)=> b.id - a.id);
-    let max_id = state_users.users[0].id;
+    state_users.users.sort((a,b)=> b.id - a.id); // sort desc by id 
+    let max_id = state_users?.users[0]?.id ?? 0; 
     let obj = {id: max_id+1,name: name, email:email.trim().toLowerCase(), password: password}
     state_users.users.push(obj);
     return state_users;
@@ -134,4 +134,34 @@ function delete_user (req_params_id) {
   }
 }
 
-export { show_user, post_users, patch_user, get_users, delete_user }
+function get_user_data (name, password) {
+  try {   
+      let user = state_users.users.find(item => item.name == name && item.password == password);
+      console.log(user)
+      if (user.id)
+        return user;
+      else
+        return null;
+    }
+    catch (e) {
+      throw e;
+    }  
+}
+
+function check_user_exists(id) {
+  try {   
+      let user = state_users.users.find(item => item.id === parseInt(id) );
+      if (user.id)
+        return true;
+      else
+        return null;
+    }
+    catch (e) {
+      throw e;
+    }  
+}
+
+
+
+
+export { show_user, post_users, patch_user, get_users, delete_user, get_user_data, check_user_exists }

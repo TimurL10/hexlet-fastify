@@ -29,7 +29,23 @@ class Routes {
 
 export default async function users_routes(app) {
 
-    let rout = new Routes; 
+    let rout = new Routes;
+    
+        const requireAuth = async (req,res) => {
+            try {
+                if (req.session?.user_id) {
+                    let user_id_cookie = req.session.user_id;            
+                    let exists_cookie = controller.check_user_exists(user_id_cookie)
+                    if (!exists_cookie)               
+                        return res.code(404).send('user not found');
+                } 
+                else
+                    return res.redirect('/login')
+            }
+            catch (e) {
+                throw e;
+            }            
+        }
         
     app.get('/users/:id', (req, res) => {
         let user = controller.show_user(req.params);
@@ -43,12 +59,11 @@ export default async function users_routes(app) {
     res.view('/src/views/new_users.pug')
     })
 
-    app.get(rout.get_rout('usersPath'), (req, res) => {
-
+    app.get(rout.get_rout('usersPath'),{preHandler: requireAuth}, (req, res) => {
         const visited = Boolean(req.cookies.visited);
         res.cookie('visited', 'true', { path: '/' });
 
-        let state_users = controller.get_users();        
+        let state_users = controller.get_users(); 
         return res.view('/src/views/users.pug',{
             users: state_users.users,
             rout,
@@ -57,6 +72,7 @@ export default async function users_routes(app) {
     })
 
     app.post('/users', {
+    preHandler: requireAuth,
     attachValidation: true,
     schema: {
         body: yup.object({
@@ -135,13 +151,37 @@ export default async function users_routes(app) {
             res.redirect('/users')
     }) 
 
-    /*app.use((req, res, next) => {
-        let coo = req.cookies.visited;
-        res.cookie('visited', true)
-        next()
-    })*/
+    app.get('/login',(req,res) => {
+        res.view('src/views/login.pug') 
+    })
 
+    app.post('/login',(req,res) => {
+        const {name,password} = req.body;
+        if (!name || !password)
+            return  res.code(404).send('user not found'); 
+        console.log('user')
+        let user = controller.get_user_data(name, password);
+        console.log(user)
+        req.session.user_id = user.id;
 
+        res.redirect('/users') 
+    })   
+
+    /*
+        app.addHook('preHandler', async (req, reply) => {
+        const sessionUserId = req.session.user_id
+
+        if (!sessionUserId) {
+            return
+        }
+
+        const sessionUserExists = controller.check_user_exists(sessionUserId)
+
+        if (!sessionUserExists) {
+            return reply.code(404).send('user not found')
+        }
+        })
+    */
 
 
 }
