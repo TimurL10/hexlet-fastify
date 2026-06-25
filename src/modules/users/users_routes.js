@@ -31,23 +31,25 @@ export default async function users_routes(app) {
 
     let rout = new Routes;
     
-        const requireAuth = async (req,res) => {
-            try {
-                if (req.session?.user_id) {
-                    let user_id_cookie = req.session.user_id;            
-                    let exists_cookie = controller.check_user_exists(user_id_cookie)
-                    if (!exists_cookie)               
-                        return res.code(404).send('user not found');
-                } 
-                else
-                    return res.redirect('/login')
-            }
-            catch (e) {
-                throw e;
-            }            
+    const requireAuth = async (req,res) => {
+        try {
+            console.log(new Date().toISOString(), 'users_routes.js', 'requireAuth()');
+            if (req.session?.user_id) {
+                let user_id_cookie = req.session.user_id;            
+                let exists_cookie = controller.check_user_exists(user_id_cookie)
+                if (!exists_cookie)               
+                    return res.code(404).send('user not found');
+            } 
+            else
+                return res.redirect('/login')
         }
+        catch (e) {
+            throw e;
+        }            
+    }
         
     app.get('/users/:id', (req, res) => {
+        console.log(new Date().toISOString(), 'users_routes.js', 'app.get(/users/:id)');
         let user = controller.show_user(req.params);
         if (!user)
             res.code(404).send('User not found') 
@@ -56,18 +58,23 @@ export default async function users_routes(app) {
     })
 
     app.get('/users/new', (req, res) => {  
-    res.view('/src/views/new_users.pug')
+        console.log(new Date().toISOString(), 'users_routes.js', 'app.get(/users/new)');
+        res.view('/src/views/new_users.pug')
     })
 
     app.get(rout.get_rout('usersPath'),{preHandler: requireAuth}, (req, res) => {
+        console.log(new Date().toISOString(), 'users_routes.js', 'app.get(/users)');
         const visited = Boolean(req.cookies.visited);
         res.cookie('visited', 'true', { path: '/' });
 
-        let state_users = controller.get_users(); 
+        const state_users = controller.get_users(); 
+        const messages = res.flash() || {}
+        console.log(messages)
         return res.view('/src/views/users.pug',{
             users: state_users.users,
             rout,
             visited,
+            messages
         })
     })
 
@@ -96,7 +103,8 @@ export default async function users_routes(app) {
         return { error: e }
         }
     },
-    }, (req, res) => {      
+    }, (req, res) => {   
+        console.log(new Date().toISOString(), 'users_routes.js', 'app.post(/users)');
         let {name, email, password,passwordConfirmation} = req.body;
         if (req.validationError) {
         const data = {
@@ -109,13 +117,18 @@ export default async function users_routes(app) {
         let state_users = controller.post_users(req.body);  
         if (typeof(state_users) != 'object')
             return  res.code(404).send('user not found'); 
-        else
-            res.redirect('/users')
+        else {
+            console.log('ПЕРЕД flash:', req.session);  // ← см сессию
+            req.flash('success', 'A user was successfully added to your system');
+            console.log('ПОСЛЕ flash:', req.session);  // ← проверь, сохранилось ли
+            res.redirect('/users');
+        }
+            
     })
 
     app.get('/users/:id/edit', (req, res) => {
+        console.log(new Date().toISOString(), 'users_routes.js', 'app.get(/users/:id/edit)');
         let user = controller.show_user(req.params);
-        console.log(user)
         if (!user)
             return  res.code(404).send('user not found'); 
         else
@@ -139,7 +152,8 @@ export default async function users_routes(app) {
         return { error: e }
         }
     },
-    },(req,res) => {      
+    },(req,res) => {
+        console.log(new Date().toISOString(), 'users_routes.js', 'app.post(/users/:id)');      
         let state_users;
         if (req.body._method === 'PATCH') 
             state_users = controller.patch_user(req.body,req.params.id);
@@ -152,18 +166,18 @@ export default async function users_routes(app) {
     }) 
 
     app.get('/login',(req,res) => {
+        console.log(new Date().toISOString(), 'users_routes.js', 'app.get(/login)');  
         res.view('src/views/login.pug') 
     })
 
     app.post('/login',(req,res) => {
+        console.log(new Date().toISOString(), 'users_routes.js', 'app.post(/login)');  
         const {name,password} = req.body;
         if (!name || !password)
             return  res.code(404).send('user not found'); 
-        console.log('user')
         let user = controller.get_user_data(name, password);
-        console.log(user)
         req.session.user_id = user.id;
-
+        req.flash('success', 'A user was successfully loged in');
         res.redirect('/users') 
     })   
 

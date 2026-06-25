@@ -70,6 +70,7 @@ const state_users = {
 }
 
 function show_user (req_params) {
+    console.log(new Date().toISOString(), 'users_controller.js', 'show_user()');
     let {id}  = req_params;
     let user = state_users.users.find(item => item.id ===  parseInt(id));
     if (!user) {
@@ -80,11 +81,13 @@ function show_user (req_params) {
 
 
 function get_users () {    
+    console.log(new Date().toISOString(), 'users_controller.js', 'get_users()');
     return state_users;
 }
 
 function post_users(req_body) { 
   try {
+    console.log(new Date().toISOString(), 'users_controller.js', 'post_users()');
     let {name, email, password,passwordConfirmation} = req_body;       
     state_users.users.sort((a,b)=> b.id - a.id); // sort desc by id 
     let max_id = state_users?.users[0]?.id ?? 0; 
@@ -101,6 +104,7 @@ function post_users(req_body) {
 
 function patch_user (req_body,req_params_id) {
   try {
+    console.log(new Date().toISOString(), 'users_controller.js', 'patch_user()');
     let user_id = req_params_id;
     let {name, email} = req_body;
 
@@ -120,6 +124,7 @@ function patch_user (req_body,req_params_id) {
 
 function delete_user (req_params_id) {
   try {
+    console.log(new Date().toISOString(), 'users_controller.js', 'delete_user()');
     let user_id = req_params_id;
     let user_index = state_users.users.findIndex(item => item.id === parseInt(user_id));
     if (user_index === -1)
@@ -136,8 +141,8 @@ function delete_user (req_params_id) {
 
 function get_user_data (name, password) {
   try {   
+      console.log(new Date().toISOString(), 'users_controller.js', 'get_user_data()');
       let user = state_users.users.find(item => item.name == name && item.password == password);
-      console.log(user)
       if (user.id)
         return user;
       else
@@ -150,6 +155,7 @@ function get_user_data (name, password) {
 
 function check_user_exists(id) {
   try {   
+      console.log(new Date().toISOString(), 'users_controller.js', 'check_user_exists()');
       let user = state_users.users.find(item => item.id === parseInt(id) );
       if (user.id)
         return true;

@@ -5,6 +5,7 @@ import formbody from '@fastify/formbody'
 import session from '@fastify/session'
 import middie from '@fastify/middie'
 import f_cookie from '@fastify/cookie'
+import flash from '@fastify/flash'
 import users_routes from './modules/users/users_routes.js';
 //import courses_routes from './modules/courses/courses_routes.js';
 
@@ -30,6 +31,7 @@ try {
       secure: false,
     },
   })
+  await app.register(flash);
   await app.register(middie);  
   await app.register(users_routes);
 
