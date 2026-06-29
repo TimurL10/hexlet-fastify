@@ -1,3 +1,6 @@
+import sqlite3 from 'sqlite3'
+const db = new sqlite3.Database(':memory:')
+
 
 const state = {
   courses: [
@@ -69,10 +72,10 @@ const state_users = {
   ]
 }
 
-function show_user (req_params) {
+async function show_user (req_params) {
     console.log(new Date().toISOString(), 'users_controller.js', 'show_user()');
     let {id}  = req_params;
-    let user = state_users.users.find(item => item.id ===  parseInt(id));
+    let user = await state_users.users.find(item => item.id ===  parseInt(id));
     if (!user) {
       return null;
     }

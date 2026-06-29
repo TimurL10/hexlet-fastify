@@ -8,7 +8,9 @@ import f_cookie from '@fastify/cookie'
 import flash from '@fastify/flash'
 import users_routes from './modules/users/users_routes.js';
 //import courses_routes from './modules/courses/courses_routes.js';
+import { prepareDatabase } from './modules/users/users_repository.js'
 
+await prepareDatabase()
 
 try {
     
